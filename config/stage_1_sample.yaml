@@ -1,0 +1,40 @@
+basic_settings: 
+  batch_size: 32
+  epochs: 20
+  seed: 1234
+  gpuid: 1,2,3,4
+  lr: 0.0001
+  check_val_every_n_epoch: 1
+  log_every_n_steps: 1
+  savedir: a_train_log/test
+  tl_model: models.tl_model_postft
+  module_model: models.wav2vec.l5_aasist_step
+  data_module: utils/loadData/asvspoof_data_DA.py
+
+loss_settings:
+  type: WCE
+  loss_lr: 0.01
+
+optimizer:
+  type: adam
+
+scheduler:
+  type: none
+
+callbacks:
+  early_stop: 
+    monitor: eer
+    patience: 3
+    mode: "min"
+    log_rank_zero_only: True
+
+  ModelCheckpoint:
+    monitor: dev_eer
+    filename: best_model-{epoch:02d}-{dev_eer:.4f}
+    save_top_k: -1
+    save_weights_only: False
+    mode: min
+
+  LearningRateMonitor:
+    logging_interval: epoch
+    log_weight_decay: True
