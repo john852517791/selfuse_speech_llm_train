@@ -23,13 +23,8 @@ def main(args):
     dm_module = importlib.import_module(toolcfg.convert_path(basicSet.data_module))
     dm_here = dm_module.data_module(basicSet)
 
-    # model init
-    prj_model = importlib.import_module(toolcfg.convert_path(args.module_model))
-    model = prj_model.Model(conf)
-
     # init model, including loss func, optim and scheduler 
     customed_model_wrapper = tl_model.base_model(
-            model=model,
             args=conf
             )
 

@@ -7,9 +7,12 @@ basic_settings:
   check_val_every_n_epoch: 1
   log_every_n_steps: 1
   savedir: a_train_log/test
-  tl_model: models.tl_model_postft
-  module_model: models.wav2vec.l5_aasist_step
-  data_module: utils/loadData/asvspoof_data_DA.py
+  tl_model: llama_omni_train.models.whole.llama_omni_stage1
+  data_module: llama_omni_train/utils/load_data/stage1_datamodule.py
+  llm_dir: "reference/LLaMA-Omni-main/Llama-3.1-8B-Omni"
+  lora_alpha: 2
+  use_lora: True
+
 
 loss_settings:
   type: WCE
