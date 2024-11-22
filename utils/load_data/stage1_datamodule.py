@@ -85,17 +85,3 @@ def collate_fn(batch):
     speech_lengths = torch.stack(speech_lengths, dim=0)
     return input_ids, speech_tensors, speech_lengths,answer_tokens
 
-
-# conv = conv_llama_3.copy()
-# conv.append_message(conv.roles[0], "<speech>\nPlease directly answer the questions in the user's speech.")
-# conv.append_message(conv.roles[1], None)
-# prompt = conv.get_prompt()
-# text_token = tokenizer_speech_token(prompt,
-#                                     tokenizer=AutoTokenizer.from_pretrained(
-#                       "reference/LLaMA-Omni-main/Llama-3.1-8B-Omni", 
-#                     # self.args.tokenizer_dir,
-#                     use_fast=False
-#                       ),
-#                                       return_tensors='pt')
-
-# print(text_token)

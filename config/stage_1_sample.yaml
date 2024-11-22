@@ -12,8 +12,8 @@ basic_settings:
   llm_dir: "reference/LLaMA-Omni-main/Llama-3.1-8B-Omni"
   lora_alpha: 2
   use_lora: True
-
-
+  encoder_type: llama_omni # glm4_encoder
+  encoder_dir: large-v3 #
 loss_settings:
   type: WCE
   loss_lr: 0.01

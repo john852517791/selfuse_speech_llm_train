@@ -6,11 +6,13 @@ from transformers import AutoTokenizer
 from torch import Tensor
 import sys
 sys.path.append("./")
-from models.components.whisper_speech_encoder import WhisperWrappedEncoder
+from models.components.speech_encoder import encoder_type
 from models.components.speech_projector import EncoderProjectorConcat
 from models.components.llm import get_llm
 import pytorch_lightning as pl
 from torch.optim import Adam
+
+
 
 IGNORE_INDEX = -100
 SPEECH_TOKEN_INDEX = -200
@@ -21,8 +23,7 @@ class SpeechLLMLightning(pl.LightningModule):
     def __init__(self, args):
         super().__init__()
         self.save_hyperparameters()
-        self.speech_projector = EncoderProjectorConcat()
-        self.whisper_encoder = WhisperWrappedEncoder.load()
+        self.encoder = encoder_type[args.encoder_type](args.encoder_dir)
         self.tokenizer, self.llm_model = get_llm(
             self.args.llm_dir,
             self.args.use_lora,
@@ -70,7 +71,7 @@ class SpeechLLMLightning(pl.LightningModule):
         front_prompt,back_promt = prompts[0],prompts[1]
         front_tokens, back_tokens = self.tokenizer(front_prompt), self.tokenizer(back_promt)
         # whisper encoder, adaptor
-        speech_features = self.prepare_speech(speech_tensor,speech_length)
+        speech_features = self.encoder.prepare_speech(speech_tensor,speech_length)
         combined_embeds = torch.cat([front_tokens,speech_features,back_tokens,answer_tokens],dim=1)
         atts = torch.ones(combined_embeds.size()[:-1]).to(combined_embeds.device)
 
@@ -83,16 +84,6 @@ class SpeechLLMLightning(pl.LightningModule):
 
         # llama
 
-    
-    def prepare_speech(
-        self, speech, speech_lengths
-    ):
-        speech_token = self.whisper_encoder(speech.permute(0, 2, 1))
-        speech_lengths = (speech_lengths + 1) // 2
-        encoder_outs_proj = self.speech_projector(speech_token)
-        speech_lengths = speech_lengths // self.speech_projector.k
-        speech_features = [encoder_outs_proj[i, :speech_lengths[i]] for i in range(len(encoder_outs_proj))]
-        return speech_features
     
 
 
