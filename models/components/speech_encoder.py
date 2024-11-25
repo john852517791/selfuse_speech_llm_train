@@ -49,8 +49,8 @@ encoder_type = {
 }
 
 if __name__ == "__main__":
-    speech = whisper.load_audio("test/rap01.wav")
     # default mel
+    speech = whisper.load_audio("test/rap01.wav")
     speech = whisper.pad_or_trim(speech)
     speech = whisper.log_mel_spectrogram(speech, n_mels=128).permute(1, 0)
 

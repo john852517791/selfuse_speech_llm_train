@@ -66,7 +66,7 @@ class CustomDataset(Dataset):
         conv.append_message(conv.roles[0], "<speech>\nPlease directly answer the questions in the user's speech.")
         conv.append_message(conv.roles[1], None)
         prompt = conv.get_prompt()
-        # text_token = tokenizer_speech_token(prompt,tokenizer=self.tokenizer, return_tensors='pt')
+        
         speech = whisper.load_audio(self.file_list[index]["wav_path"])
         # default mel
         speech = whisper.pad_or_trim(speech)

@@ -1,5 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, PeftModel
+import sys
+sys.path.append("./")
 
 def get_llm(name, use_lora, lora_r, lora_alpha):
     llm_tokenizer = AutoTokenizer.from_pretrained(name)
@@ -21,3 +23,6 @@ def get_llm(name, use_lora, lora_r, lora_alpha):
         llm_model.print_trainable_parameters()
 
     return llm_tokenizer, llm_model
+
+if __name__ == "__main__":
+    llm = get_llm("./reference/pretrained_models/Llama-3.2-3B",True,32,2)

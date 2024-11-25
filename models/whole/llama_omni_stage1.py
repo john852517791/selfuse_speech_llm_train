@@ -8,6 +8,7 @@ import sys
 sys.path.append("./")
 from models.components.speech_encoder import encoder_type
 from models.components.speech_projector import EncoderProjectorConcat
+import utils.b_tools.config as toolcfg
 from models.components.llm import get_llm
 import pytorch_lightning as pl
 from torch.optim import Adam
@@ -22,15 +23,17 @@ DEFAULT_SPEECH_TOKEN = "<speech>"
 class SpeechLLMLightning(pl.LightningModule):
     def __init__(self, args):
         super().__init__()
-        self.save_hyperparameters()
+        self.args = args
+        self.save_hyperparameters(args)
         self.encoder = encoder_type[args.encoder_type](args.encoder_dir)
         self.tokenizer, self.llm_model = get_llm(
             self.args.llm_dir,
             self.args.use_lora,
+            self.args.lora_r,
             self.args.lora_alpha 
             )
         # freeze whisper_encoder
-        for param in self.whisper_encoder.parameters():
+        for param in self.encoder.encoder.parameters():
             param.requires_grad = False
         
     def training_step(self, batch, batch_idx):
@@ -92,7 +95,7 @@ class SpeechLLMLightning(pl.LightningModule):
     
 if __name__ == "__main__":
     # os.environ["CUDA_VISIBLE_DEVICES"] = "5"
-    md = Model(None)
-    # print(summary(md, torch.randn((8,64600)), show_input=False))
-    op,res = md( torch.randn((8,64600)))
-    print(op.shape)
+    conf = toolcfg.yaml2namespace("config/stage_1_sample.yaml").basic_settings
+    print(conf)
+    md = SpeechLLMLightning(conf)
+
