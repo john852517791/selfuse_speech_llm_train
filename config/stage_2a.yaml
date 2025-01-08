@@ -1,0 +1,37 @@
+basic_settings: 
+  batch_size: 4
+  epochs: 1000000
+  seed: 1234
+  gpuid: 6,7
+  lr: 0.0006
+  weight_decay: 0.0001
+  check_val_every_n_epoch: 1
+  log_every_n_steps: 1
+  val_check_interval: 500
+  grad_accumulate_steps: 1
+  savedir: a_train_log/stage_1c
+  tl_model: stage_models/tl_model_1c.py
+  data_module: utils/load_data/load_asr_data.py
+  llm_path: Qwen2-7B-Instruct
+  # resume_from_checkpoint: None
+
+
+fbank_conf:
+  dither: 0.0
+  frame_length: 25
+  frame_shift: 10
+  num_mel_bins: 80
+  sample_rate: 16000
+
+data_settings:
+  train: utils/load_data/asrdata.json
+  eval: utils/load_data/asrdata.json
+
+loss_settings:
+  type: CTC
+
+optimizer:
+  type: adam
+
+scheduler:
+  type: none

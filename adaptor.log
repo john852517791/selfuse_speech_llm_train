@@ -1,0 +1,7 @@
+CNNSubsampling(
+  (left_padding2): ConstantPad1d(padding=(4, 0), value=0.0)
+  (conv1d2): Conv1d(1024, 2048, kernel_size=(5,), stride=(2,))
+  (bn2): LayerNorm((2048,), eps=0.001, elementwise_affine=True)
+  (relu2): GELU(approximate='none')
+  (project): Linear(in_features=2048, out_features=3584, bias=True)
+)

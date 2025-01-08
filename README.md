@@ -1,3 +1,3 @@
-# llama_omni_train
+# Freeze-Omni: A Smart and Low Latency Speech-to-speech Dialogue Model with Frozen LLM
 
-Unofficial implementation
+python train.py --conf config/stage_1a.yaml

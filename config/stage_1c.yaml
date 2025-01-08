@@ -1,0 +1,97 @@
+basic_settings: 
+  batch_size: 1
+  epochs: 1000000
+  seed: 1234
+  gpuid: 6,7
+  lr: 0.0006
+  weight_decay: 0.0001
+  check_val_every_n_epoch: 1
+  log_every_n_steps: 1
+  val_check_interval: 500
+  grad_accumulate_steps: 1
+  savedir: a_train_log/stage_1c
+  tl_model: stage_models/tl_model_1c.py
+  data_module: utils/load_data/load_asr_data.py
+  llm_path: Qwen2-7B-Instruct
+  # resume_from_checkpoint: None
+
+adapter_conf:
+  enc_out_dim: 1024
+  llm_embed_dim: 3584
+  kernel_size: 5
+  norm: layer
+  activation_func: gelu
+
+prompt_tune_conf:
+  prompt_num: 25
+
+
+
+encoder_conf:
+  overview_conf:
+    encoder-input-dim: 80
+    encoder-layer-config: subsampling-transformer
+    encoder_output_dim: 1024
+  para_conf:
+    subsampling:
+      subsampling-dropout-rate: 0.1
+      subsampling-input-dim: 80
+      subsampling-output-dim: 1024
+      subsampling-rate: 4
+    transformer:
+      transformer-attention-dim: 1024
+      transformer-attention-dropout-rate: 0.0
+      transformer-attention-heads: 16
+      transformer-chunk_size: 4
+      transformer-concat-after: false
+      transformer-dropout-rate: 0.1
+      transformer-dynamic-chunks: false
+      transformer-input-dim: 1024
+      transformer-input-layer: linear
+      transformer-left_chunks: 16
+      transformer-linear-units: 4096
+      transformer-normalize-before: true
+      transformer-num-blocks: 24
+      transformer-output-dim: 1024
+      transformer-pos-enc-class: rel-enc
+      transformer-positional-dropout-rate: 0.1
+      transformer-positionwise-layer-type: linear
+
+fbank_conf:
+  dither: 0.0
+  frame_length: 25
+  frame_shift: 10
+  num_mel_bins: 80
+  sample_rate: 16000
+
+data_settings:
+  train: utils/load_data/asrdata.json
+  eval: utils/load_data/asrdata.json
+
+loss_settings:
+  type: CTC
+
+optimizer:
+  type: adam
+
+scheduler:
+  type: none
+
+# callbacks:
+#   # early_stop: 
+#   #   monitor: eer
+#   #   patience: 3
+#   #   mode: "min"
+#   #   log_rank_zero_only: True
+
+#   ModelCheckpoint:
+#     monitor: CTCloss
+#     filename: model_{step:02d}_{CTCloss:.4f}
+#     save_top_k: -1
+#     save_weights_only: False
+#     mode: min
+#     every_n_train_steps: 500
+
+#   LearningRateMonitor:
+#     logging_interval: step
+#     log_weight_decay: True
